@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>subject</title>
+<style>
+body{
+  background-image: url('/static/images/img9.jpg');
+  background-repeat: no-repeat;
+  /*background-color: #ffffff;*/
+  background-size: cover;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  margin-top: 50px;
+}
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px !important;
+  font-family: monospace;
+}
+.input-edit{
+	position: absolute;
+    width: 93%;
+    height: 91%;
+    top: 0;
+    left: 0;
+    outline: none;
+    border: none;
+    padding-left: 6px;
+    font-size: 20px;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease-in-out;
+
+}
+.edit-col{
+	display: none;
+	margin-top: 0px
+}
+.sub-row.show .edit-col{
+	display: block;
+}
+.sub-row.show .input-edit{
+	opacity: 1;
+	pointer-events: all;
+	color: blue;
+}
+.sub-wrapper{
+	position: relative;
+    width: 200px;
+
+
+}
+td{   
+    position: relative;
+    text-align: center;
+    font-size: 18px;
+    font-family: monospace !important;
+}
+.edit-button{
+	width:100%;
+}
+.update-col{
+
+	background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 15px;
+}
+.update-col:focus{
+
+    outline: none;
+ }
+ #students {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 40%;
+  margin: auto;
+  background-color: #ffffff}
+
+#students td, #students th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#students tr:nth-child(even){background-color: #f2f2f2;}
+
+#students tr:hover {background-color: #ddd;}
+
+#students th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+.addsub{
+		width: 24%;
+		margin: 0 auto;
+
+}
+.button-wrapper{
+	padding-top: 10px;
+	text-align: center;
+}
+.addsub .sub{
+	padding-bottom: 7px;
+}
+.save{
+  color: white;
+  background-color: #4CAF50;
+}
+.cancel{
+  color: white;
+  background-color: #4CAF50;
+
+}
+
+</style>
+</head>
+<body>
+
+<table id="students">
+
+
+	<thead>
+		<th>SUBJECTLIST</th>
+		<th>REMOVE</th>
+		<th colspan="2">UPDATE/EDIT</th>
+	</thead>
+	<tbody>
+
+		{% for i in card %}
+		
+		<tr class="sub-row">
+			<form action="/updatesubject/{{i.id}}/" method="post">
+			 {% csrf_token %}
+
+			<td class="sub-wrapper">{{i.subjects}}<input type="text" name="subnew" class="input-edit" value="{{i.subjects}}"></td><td><a class="button" href="/deletesubject/{{i.id}}/">DELETE</a><input type="hidden" value="{{i.id}}"></td>
+			
+			<td class="edit-col"><div class ="button"input type="hidden" value="{{i.id}}"><input type="submit" class="update-col" value="UPDATE"name="editsub">
+			</div>
+			</td>
+		    </form>
+			<td><button class="button edit-button">EDIT</button><input type="hidden" value="{{i.id}}"></td>
+
+			
+		</tr>
+		{% endfor %}
+		<!-- <tr> -->
+			<!-- <td>science</td><td><button type="button">DELETE</button></td> -->
+		<!-- </tr> -->
+	</tbody>
+</table>
+<div class="addsub">
+
+	<form method="post" action="/subject/">{%csrf_token%}
+		<h3>ADD NEWSUBJECT</h3>
+		<div class="sub">
+			Subject&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:<input type="text" name="subname" required/>
+		</div>
+		<div>
+			Maximum:<input type="number" name="score" required/>
+		</div>
+		<div class="button-wrapper"><input type="submit" class="save"value= "Save"name="btnsave">
+		<input type="reset" class="cancel" value="cancel"></div>
+		<span style="color:red">{{Try...again}}</span>
+	</form>
+</div>
+
+<script src="/static/js/jquery-2.1.4.min.js"></script>
+<script src="/static/js/jquery-ui.js"></script>
+<script>
+   $(document).ready(function(){
+// subject edit
+  $('.sub-row').each(function () {
+  	var clicked = $(this);
+    clicked.find('.edit-button').click(function(){
+
+      $(this).html() == "EDIT" ? $(this).html('CANCEL') : $(this).html('EDIT');
+      $(this).closest('.sub-row').toggleClass('show');
+      $(this).closest('.sub-row').find('.input-edit').focus();
+
+      // alert("The paragraph was clicked.");
+    });
+   
+
+
+  });
+
+});
+
+</script>
+</body>
+</html>

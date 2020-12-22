@@ -1,0 +1,196 @@
+<html>
+   <head>
+    <title>
+    {% block title %}
+             
+        marklist
+        
+              {% endblock %}
+     </title>
+<style>
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+/*tr:nth-child(even) {
+    background-color: #dddddd;
+}*/
+tr {
+    background-color: lightblue;
+}
+.amt{
+    text-align:right;
+}
+#myTable{
+  margin: 0 auto;
+
+}
+.heading1{
+    display: flex;
+    justify-content: space-around;
+}
+.convert{
+  padding-top: 15px;
+  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  /*justify-content: y;*/
+  justify-content: center;
+}
+#convert{
+  margin-right: 115px;
+}
+.heading2{
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
+    /*text-c: #ffffff;*/
+}
+.heading2 a{
+  color: white;
+}
+.heading3{
+  
+    background-color: #e7ecec;
+    /*background-color:(rgb(239, 239, 239), rgb(59, 59, 59));*/
+    color: white;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border: 1px solid #000000;
+
+}
+.heading3 a{
+  color: #000000;
+}
+body{
+  background-image: url('/static/images/bgimg.png');
+  background-repeat: no-repeat;
+  /*background-color: #ffffff;*/
+  background-size: cover;
+}
+
+</style>
+<div class="heading1">
+<div class="heading2"><a href ="http://localhost:8000/form/">STUDENT REGISTRATION</a></div>
+</div>
+
+
+  
+<script src="/static/js/jquery-2.1.4.min.js"></script>
+<script src="/static/js/jquery-ui.js"></script>
+<script>
+   $(document).ready(function(){
+
+    $('.mark').on('change', function () {
+    var total = 0; 
+    var maxmark = $(this).closest('tr').find('.max-mark').val();
+    if (!isNaN(maxmark) && maxmark >0 && $(this).val() > maxmark){
+          // console.log(maxmark);
+          alert('Enter value less than ' + maxmark + '')
+          $(this).val('0');
+        }
+    $('.mark').each(function () {
+      var value = $(this).val();
+      
+        
+            if (isNaN(value) || value == '')
+        value = 0;
+      total = parseFloat(total) + parseFloat(value);
+      if (isNaN(total))
+        total = 0;
+    });
+  
+    $('#lblTotal').val(total).change(); //$scope().val(tot);
+         
+     });
+
+// subject edit
+  // $('.sub-row').each(function () {
+  //   $(this).find('.edit-button').click(function(){
+  //     $(this).parents('.sub-row').find('.sub-wrapper').addClass('show')
+  //     alert("The paragraph was clicked.");
+  //   });
+   
+
+
+  // });
+
+});
+
+</script>
+   </head>
+   <body>
+
+    <!-- {% block content %} -->
+
+      <table id="myTable" class="table table-bordered table-striped table-fixed">
+
+         <thead>
+<tr><td  colspan="2"><span style="font-size:large">ABC SCHOOL</span></td></tr>
+<tr><td>Classes</td><td>From<input type="Text" name="fr" style="width:50px">To<input type="Text" name="to" style="width:50px"></td></tr>
+  <tr><td  colspan="2">Student:<input type="text" placeholder="student name" name="studnam" id="studnam" style="with:400px;" required></td></tr>
+            <th>Subject</th>
+            <th>Mark</th>
+          
+         </thead>
+
+
+         <tbody>
+          {% for i in card %}
+           <tr><td>{{i.subjects}}</td><td><input type="number" min=0 max="100" class="mark" name="mark1">
+            <input type="hidden" value="{{i.maxscore}}" id="maxscore" class="max-mark"></td></tr>
+
+          {% endfor %}
+   <!--  <tr><td>Maths</td><td><input type="number" min=0 max="100" class="mark" name="mark1"></td></tr>
+    <tr><td>Physics</td><td><input type="number" min=0 max="100" class="mark" name="mark1"></td></tr>
+    <tr><td>Chemistry</td><td><input type="number" min=0 max="100" class="mark" name="mark1"></td></tr>
+    <tr><td>Biology</td><td><input type="number" min=0 max="100" class="mark" name="mark1"></td></tr> -->
+  
+<tr><td>Total</td><td><input type="Label" name="lblTotal" id="lblTotal" style="width:40%; font-weight:bold;text-align:right;"  readonly/></td></tr>
+  </tbody>  
+      </table>
+      <div class="convert">
+      <button id="convert">
+      Prepare Card
+      </button>
+      <div class="heading3"><a href="http://localhost:8000/subject/">Modify Table</a></div>
+      </div>
+      <div id="result">
+         <!-- Result will appear be here -->
+      </div>
+      <script type="text/javascript" src="/static/js/html2canvas.js"></script>
+<script>
+         //convert table to image            
+         function convertToImage() {
+            var resultDiv = document.getElementById("result");
+            html2canvas(document.getElementById("myTable"), {
+    scale:2,
+                onrendered: function(canvas) {
+                    var img = canvas.toDataURL("image/png");
+    //uri = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+      uri=img;
+        var fnam= document.getElementById("studnam").value;
+                    result.innerHTML = '<a download='+fnam+'_card.png href="'+uri+'">Download Card</a>';
+                    }
+            });
+         }        
+         //click event
+         var convertBtn = document.getElementById("convert");
+         convertBtn.addEventListener('click', convertToImage);
+      </script>
+      <!-- {% endblock content %} -->
+   </body>
+</html>  
+{% block style%}
+{% endblock %}
